@@ -1298,6 +1298,12 @@ class pPie
         /* Compute the wasted angular space between series */
         $WastedAngular = (count($Values) == 1) ? 0 : count($Values) * $DataGapAngle;
 
+        /* Prevent ScaleFactor from going negative when there are many slices. */
+        if ($WastedAngular >= 360) {
+            $DataGapAngle = max(0, intdiv(359, count($Values)));
+            $WastedAngular = count($Values) * $DataGapAngle;
+        }
+        
         /* Compute the scale */
         $ScaleFactor = (360 - $WastedAngular) / $SerieSum;
         $RestoreShadow = $this->pChartObject->Shadow;
